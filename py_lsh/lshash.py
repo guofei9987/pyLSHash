@@ -3,6 +3,7 @@
 import os
 import json
 import numpy as np
+import pickle
 
 from .storage import storage
 
@@ -47,57 +48,22 @@ class LSHash(object):
         self.input_dim = input_dim
         self.num_hashtables = num_hashtables
 
-        if storage_config is None:
-            storage_config = {'dict': None}
-        self.storage_config = storage_config
-
-        if matrices_filename and not matrices_filename.endswith('.npz'):
-            raise ValueError("The specified file name must end with .npz")
-        self.matrices_filename = matrices_filename
-        self.overwrite = overwrite
+        self.storage_config = storage_config or {'dict': None}
 
         self._init_uniform_planes()
         self._init_hashtables()
 
+    def save_uniform_planes(self, filename):
+        with open(filename, 'wb') as f:
+            pickle.dump(self.uniform_planes, f)
+
+    def load_uniform_planes(self, filename):
+        with open(filename, 'rb') as f:
+            self.uniform_planes = pickle.load(f)
+
     def _init_uniform_planes(self):
-        """ Initialize uniform planes used to calculate the hashes
-
-        if file `self.matrices_filename` exist and `self.overwrite` is
-        selected, save the uniform planes to the specified file.
-
-        if file `self.matrices_filename` exist and `self.overwrite` is not
-        selected, load the matrix with `np.load`.
-
-        if file `self.matrices_filename` does not exist and regardless of
-        `self.overwrite`, only set `self.uniform_planes`.
-        """
-
-        if "uniform_planes" in self.__dict__:
-            return
-
-        if self.matrices_filename:
-            file_exist = os.path.isfile(self.matrices_filename)
-            if file_exist and not self.overwrite:
-                try:
-                    npzfiles = np.load(self.matrices_filename)
-                except IOError:
-                    print("Cannot load specified file as a numpy array")
-                    raise
-                else:
-                    npzfiles = sorted(npzfiles.items(), key=lambda x: x[0])
-                    self.uniform_planes = [t[1] for t in npzfiles]
-            else:
-                self.uniform_planes = [self._generate_uniform_planes()
-                                       for _ in range(self.num_hashtables)]
-                try:
-                    np.savez_compressed(self.matrices_filename,
-                                        *self.uniform_planes)
-                except IOError:
-                    print("IOError when saving matrices to specificed path")
-                    raise
-        else:
-            self.uniform_planes = [self._generate_uniform_planes()
-                                   for _ in range(self.num_hashtables)]
+        self.uniform_planes = [self._generate_uniform_planes()
+                               for _ in range(self.num_hashtables)]
 
     def _init_hashtables(self):
         """ Initialize the hash tables such that each record will be in the
