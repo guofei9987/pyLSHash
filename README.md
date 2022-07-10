@@ -1,5 +1,17 @@
 # pyLSHash
 
+# [pyLSHash](https://github.com/guofei9987/pyLSHash)
+
+[![PyPI](https://img.shields.io/pypi/v/pyLSHash)](https://pypi.org/project/pyLSHash/)
+[![Build Status](https://travis-ci.com/guofei9987/pyLSHash.svg?branch=master)](https://travis-ci.com/guofei9987/pyLSHash)
+[![codecov](https://codecov.io/gh/guofei9987/pyLSHash/branch/master/graph/badge.svg)](https://codecov.io/gh/guofei9987/pyLSHash)
+[![License](https://img.shields.io/pypi/l/pyLSHash.svg)](https://github.com/guofei9987/pyLSHash/blob/master/LICENSE)
+![Python](https://img.shields.io/badge/python->=3.5-green.svg)
+![Platform](https://img.shields.io/badge/platform-windows%20|%20linux%20|%20macos-green.svg)
+[![fork](https://img.shields.io/github/forks/guofei9987/pyLSHash?style=social)](https://github.com/guofei9987/pyLSHash/fork)
+[![Downloads](https://pepy.tech/badge/pyLSHash)](https://pepy.tech/project/pyLSHash)
+
+
 A fast Python implementation of locality sensitive hashing.
 
 I am using [https://github.com/kayzhu/LSHash](https://github.com/kayzhu/LSHash), but it stops to update since 2013.  

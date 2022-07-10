@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 import os
-import py_lsh
+import pyLSHash
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
 
@@ -22,7 +22,7 @@ def read_requirements(filename):
 
 setup(name='pyLSHash',
       python_requires='>=3.5',
-      version=py_lsh.__version__,
+      version=pyLSHash.__version__,
       description='A Python implementation of locality sensitive hashing.',
       long_description=read_file('README.md'),
       long_description_content_type="text/markdown",
