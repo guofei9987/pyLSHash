@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/pypi/l/pyLSHash.svg)](https://github.com/guofei9987/pyLSHash/blob/master/LICENSE)
 ![Python](https://img.shields.io/badge/python->=3.5-green.svg)
 ![Platform](https://img.shields.io/badge/platform-windows%20|%20linux%20|%20macos-green.svg)
-[![fork](https://img.shields.io/github/forks/guofei9987/pyLSHash?style=social)](https://github.com/guofei9987/pyLSHash/fork)
+[![stars](https://img.shields.io/github/stars/guofei9987/pyLSHash?style=social)](https://github.com/guofei9987/pyLSHash/fork)
 [![Downloads](https://pepy.tech/badge/pyLSHash)](https://pepy.tech/project/pyLSHash)
 
 
