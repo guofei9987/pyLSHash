@@ -16,8 +16,6 @@ def read_requirements(filename):
             if not line.startswith('#')]
 
 
-
-
 setup(name='pyLSHash',
       python_requires='>=3.5',
       version=pyLSHash.__version__,
@@ -32,6 +30,3 @@ setup(name='pyLSHash',
       platforms=['linux', 'windows', 'macos'],
       install_requires=['numpy'],
       zip_safe=False)
-
-
-
