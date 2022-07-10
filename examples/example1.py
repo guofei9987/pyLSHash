@@ -1,4 +1,4 @@
-from py_lsh import LSHash
+from pyLSHash import LSHash
 
 lsh = LSHash(hash_size=6, input_dim=8)
 lsh.index([1, 2, 3, 4, 5, 6, 7, 8])

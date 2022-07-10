@@ -1,4 +1,4 @@
-# LSHash
+# pyLSHash
 
 A fast Python implementation of locality sensitive hashing.
 
@@ -15,7 +15,7 @@ So I maintain it myself.
 ## Installation
 
 
-``LSHash`` depends on the following libraries:
+`pyLSHash` depends on the following libraries:
 
 - numpy
 - redis (if persistency through Redis is needed)
@@ -25,7 +25,7 @@ To install:
 
 
 ```bash
-$ pip install lshash
+$ pip install pyLSHash
 ```
 
 ## Quickstart
@@ -34,7 +34,7 @@ To create 6-bit hashes for input data of 8 dimensions:
 
 
 ```python
-from py_lsh import LSHash
+from pyLSHash import LSHash
 
 lsh = LSHash(6, 8)
 lsh.index([1, 2, 3, 4, 5, 6, 7, 8])

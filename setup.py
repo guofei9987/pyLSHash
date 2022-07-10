@@ -20,13 +20,13 @@ def read_requirements(filename):
 
 
 
-setup(name='py_lsh',
+setup(name='pyLSHash',
       python_requires='>=3.5',
       version=py_lsh.__version__,
       description='A Python implementation of locality sensitive hashing.',
       long_description=read_file('README.md'),
       long_description_content_type="text/markdown",
-      url='https://github.com/guofei9987/py_lsh',
+      url='https://github.com/guofei9987/pyLSHash',
       author='Guo Fei',
       author_email='guofei9987@foxmail.com',
       license='MIT',
