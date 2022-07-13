@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+from abc import ABCMeta, abstractmethod
 
 try:
     import redis
@@ -23,41 +24,47 @@ def storage(storage_config, index):
         raise ValueError("Only in-memory dictionary and Redis are supported.")
 
 
-class BaseStorage(object):
+class StorageBase(metaclass=ABCMeta):
+    @abstractmethod
     def __init__(self, config):
         """ An abstract class used as an adapter for storages. """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def keys(self):
         """ Returns a list of binary hashes that are used as dict keys. """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def set_val(self, key, val):
         """ Set `val` at `key`, note that the `val` must be a string. """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def get_val(self, key):
         """ Return `val` at `key`, note that the `val` must be a string. """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def append_val(self, key, val):
         """ Append `val` to the list stored at `key`.
 
         If the key is not yet present in storage, create a list with `val` at
         `key`.
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def get_list(self, key):
         """ Returns a list stored in storage at `key`.
 
         This method should return a list of values stored at `key`. `[]` should
         be returned if the list is empty or if `key` is not present in storage.
         """
-        raise NotImplementedError
+        pass
 
 
-class InMemoryStorage(BaseStorage):
+class InMemoryStorage(StorageBase):
     def __init__(self, config):
         self.name = 'dict'
         self.storage = dict()
@@ -78,7 +85,7 @@ class InMemoryStorage(BaseStorage):
         return self.storage.get(key, [])
 
 
-class RedisStorage(BaseStorage):
+class RedisStorage(StorageBase):
     def __init__(self, config):
         if not redis:
             raise ImportError("redis-py is required to use Redis as storage.")
