@@ -33,12 +33,6 @@ class LSHash(object):
         configuration used by the backend. For `redis` it should be in the
         format of `{"redis": {"host": hostname, "port": port_num}}`, where
         `hostname` is normally `localhost` and `port` is normally 6379.
-    :param matrices_filename:
-        (optional) Specify the path to the compressed numpy file ending with
-        extension `.npz`, where the uniform random planes are stored, or to be
-        stored if the file does not exist yet.
-    :param overwrite:
-        (optional) Whether to overwrite the matrices file if it already exist
     """
 
     def __init__(self, hash_size, input_dim, num_hashtables=1,

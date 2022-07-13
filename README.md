@@ -54,7 +54,7 @@ lsh.query([1, 2, 3, 4, 5, 6, 7, 7])
 
 
 ```python
-LSHash(hash_size, input_dim, num_of_hashtables=1, storage=None, matrices_filename=None, overwrite=False)
+LSHash(hash_size, input_dim, num_of_hashtables=1, storage=None)
 ```
 
 parameters:
@@ -63,8 +63,6 @@ parameters:
 - ``input_dim``: The dimension of the input vector.
 - ``num_hashtables = 1``: (optional) The number of hash tables used for multiple lookups.
 - ``storage = None``: (optional) Specify the name of the storage to be used for the index storage. Options include "redis".
-- ``matrices_filename = None``: (optional) Specify the path to the .npz file random matrices are stored or to be stored if the file does not exist yet
-- ``overwrite = False``: (optional) Whether to overwrite the matrices file if it already exist
 
 
 To index a data point of a given ``LSHash`` instance, e.g., ``lsh``:
