@@ -42,15 +42,16 @@ class LSHash(object):
     """
 
     def __init__(self, hash_size, input_dim, num_hashtables=1,
-                 storage_config=None, matrices_filename=None, overwrite=False):
+                 storage_config=None):
 
         self.hash_size = hash_size
         self.input_dim = input_dim
         self.num_hashtables = num_hashtables
-
         self.storage_config = storage_config or {'dict': None}
 
-        self._init_uniform_planes()
+        self.uniform_planes = None
+
+        self.init_uniform_planes()
         self._init_hashtables()
 
     def save_uniform_planes(self, filename):
@@ -61,8 +62,8 @@ class LSHash(object):
         with open(filename, 'rb') as f:
             self.uniform_planes = pickle.load(f)
 
-    def _init_uniform_planes(self):
-        self.uniform_planes = [self._generate_uniform_planes()
+    def init_uniform_planes(self):
+        self.uniform_planes = [np.random.randn(self.hash_size, self.input_dim)
                                for _ in range(self.num_hashtables)]
 
     def _init_hashtables(self):
@@ -71,13 +72,6 @@ class LSHash(object):
 
         self.hash_tables = [storage(self.storage_config, i)
                             for i in range(self.num_hashtables)]
-
-    def _generate_uniform_planes(self):
-        """ Generate uniformly distributed hyperplanes and return it as a 2D
-        numpy array.
-        """
-
-        return np.random.randn(self.hash_size, self.input_dim)
 
     def _hash(self, planes, input_point):
         """ Generates the binary hash for `input_point` and returns it.
@@ -90,19 +84,8 @@ class LSHash(object):
             The dimension needs to be 1 * `input_dim`.
         """
 
-        try:
-            input_point = np.array(input_point)  # for faster dot product
-            projections = np.dot(planes, input_point)
-        except TypeError as e:
-            print("""The input point needs to be an array-like object with
-                  numbers only elements""")
-            raise
-        except ValueError as e:
-            print("""The input point needs to be of the same dimension as
-                  `input_dim` when initializing this LSHash instance""", e)
-            raise
-        else:
-            return "".join(['1' if i > 0 else '0' for i in projections])
+        projections = np.dot(planes, np.array(input_point))
+        return "".join(['1' if i > 0 else '0' for i in projections])
 
     def _as_np_array(self, json_or_tuple):
         """ Takes either a JSON-serialized data structure or a tuple that has
@@ -163,10 +146,10 @@ class LSHash(object):
             value = tuple(input_point)
 
         for i, table in enumerate(self.hash_tables):
-            table.append_val(self._hash(self.uniform_planes[i], input_point),
-                             value)
+            table.append_val(key=self._hash(self.uniform_planes[i], input_point),
+                             val=value)
 
-    def query(self, query_point, num_results=None, distance_func=None):
+    def query(self, query_point, num_results=None, distance_func="euclidean"):
         """ Takes `query_point` which is either a tuple or a list of numbers,
         returns `num_results` of results as a list of tuples that are ranked
         based on the supplied metric function `distance_func`.
@@ -187,12 +170,9 @@ class LSHash(object):
         """
 
         candidates = set()
-        if not distance_func:
-            distance_func = "euclidean"
 
         if distance_func == "hamming":
-            if not bitarray:
-                raise ImportError(" Bitarray is required for hamming distance")
+            assert bitarray is not None, "Bitarray is required for hamming distance"
 
             for i, table in enumerate(self.hash_tables):
                 binary_hash = self._hash(self.uniform_planes[i], query_point)
