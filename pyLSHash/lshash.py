@@ -6,11 +6,7 @@ import numpy as np
 import pickle
 
 from .storage import storage
-
-try:
-    from bitarray import bitarray
-except ImportError:
-    bitarray = None
+from . import dist_func
 
 
 class LSHash(object):
@@ -143,7 +139,9 @@ class LSHash(object):
             table.append_val(key=self._hash(self.uniform_planes[i], input_point),
                              val=value)
 
-    def query(self, query_point, num_results=None, distance_func="euclidean"):
+    def query(self, query_point, num_results=None
+              , dist_func=dist_func.euclidean_dist_square
+              , key_hamming=False):
         """ Takes `query_point` which is either a tuple or a list of numbers,
         returns `num_results` of results as a list of tuples that are ranked
         based on the supplied metric function `distance_func`.
@@ -165,73 +163,22 @@ class LSHash(object):
 
         candidates = set()
 
-        if distance_func == "hamming":
-            assert bitarray is not None, "Bitarray is required for hamming distance"
-
-            for i, table in enumerate(self.hash_tables):
-                binary_hash = self._hash(self.uniform_planes[i], query_point)
+        for i, table in enumerate(self.hash_tables):
+            query_hash = self._hash(self.uniform_planes[i], query_point)
+            if key_hamming:
                 for key in table.keys():
-                    distance = LSHash.hamming_dist(key, binary_hash)
-                    if distance < 2:
+                    if hamming_dist(key, query_hash) < 2:
                         candidates.update(table.get_list(key))
-
-            d_func = LSHash.euclidean_dist_square
-
-        else:
-
-            if distance_func == "euclidean":
-                d_func = LSHash.euclidean_dist_square
-            elif distance_func == "true_euclidean":
-                d_func = LSHash.euclidean_dist
-            elif distance_func == "centred_euclidean":
-                d_func = LSHash.euclidean_dist_centred
-            elif distance_func == "cosine":
-                d_func = LSHash.cosine_dist
-            elif distance_func == "l1norm":
-                d_func = LSHash.l1norm_dist
             else:
-                raise ValueError("The distance function name is invalid.")
-
-            for i, table in enumerate(self.hash_tables):
-                binary_hash = self._hash(self.uniform_planes[i], query_point)
-                candidates.update(table.get_list(binary_hash))
+                candidates.update(table.get_list(query_hash))
 
         # rank candidates by distance function
-        candidates = [(ix, d_func(query_point, self._as_np_array(ix)))
+        candidates = [(ix, dist_func(query_point, self._as_np_array(ix)))
                       for ix in candidates]
         candidates.sort(key=lambda x: x[1])
 
         return candidates[:num_results] if num_results else candidates
 
-    ### distance functions
 
-    @staticmethod
-    def hamming_dist(bitarray1, bitarray2):
-        xor_result = bitarray(bitarray1) ^ bitarray(bitarray2)
-        return xor_result.count()
-
-    @staticmethod
-    def euclidean_dist(x, y):
-        """ This is a hot function, hence some optimizations are made. """
-        diff = np.array(x) - y
-        return np.sqrt(np.dot(diff, diff))
-
-    @staticmethod
-    def euclidean_dist_square(x, y):
-        """ This is a hot function, hence some optimizations are made. """
-        diff = np.array(x) - y
-        return np.dot(diff, diff)
-
-    @staticmethod
-    def euclidean_dist_centred(x, y):
-        """ This is a hot function, hence some optimizations are made. """
-        diff = np.mean(x) - np.mean(y)
-        return np.dot(diff, diff)
-
-    @staticmethod
-    def l1norm_dist(x, y):
-        return sum(abs(x - y))
-
-    @staticmethod
-    def cosine_dist(x, y):
-        return 1 - np.dot(x, y) / ((np.dot(x, x) * np.dot(y, y)) ** 0.5)
+def hamming_dist(key1, key2):
+    return bin(int(key1, base=2) ^ int(key2, base=2))[2:].count('1')
