@@ -18,6 +18,8 @@ install_redis:
 # command to run tests
 script:
   - coverage run -p examples/example1.py
+  - coverage run -p examples/example_redis.py
+  - coverage run -p examples/example_save.py
 
 
 # Push the results back to codecov
