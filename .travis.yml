@@ -12,7 +12,7 @@ install:
   - python setup.py install
   - sudo snap install redis
   - pip install redis
-  - redis-server
+  - redis-server -p 6381
 
 # command to run tests
 script:
