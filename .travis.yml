@@ -14,6 +14,7 @@ install:
 install_redis:
   - sudo snap install redis
   - pip install redis
+  - redis-server
 
 # command to run tests
 script:
