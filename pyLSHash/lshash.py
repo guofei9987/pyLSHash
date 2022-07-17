@@ -123,7 +123,7 @@ class LSHash(object):
         """
 
         candidates = set()
-
+        query_point=np.array(query_point)
         for i, table in enumerate(self.hash_tables):
             query_hash = self._hash(self.uniform_planes[i], query_point)
             if key_hamming:
@@ -134,7 +134,7 @@ class LSHash(object):
                 candidates.update(table.get_list(query_hash))
 
         # rank candidates by distance function
-        candidates = [(ix, dist_func(query_point, ix[0]))
+        candidates = [(ix, dist_func(query_point, np.array(ix[0])))
                       for ix in candidates]
         candidates.sort(key=lambda x: x[1])
 

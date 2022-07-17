@@ -55,6 +55,19 @@ lsh.query([1, 2, 3, 4, 5, 6, 7, 7])
 >[((1, 2, 3, 4, 5, 6, 7, 8), 1.0),
 ((2, 3, 4, 5, 6, 7, 8, 9), 11)]
 
+### User defined distance function
+
+```python
+def l1norm_dist(x, y):
+    return sum(abs(x - y))
+
+
+res2 = lsh.query([1, 2, 3, 4, 5, 6, 7, 7], dist_func=l1norm_dist)
+
+print(res2)
+```
+
+
 ## Use Redis
 
 ```python

@@ -14,3 +14,16 @@ lsh.index([10, 12, 99, 1, 5, 31, 2, 3])
 res = lsh.query([1, 2, 3, 4, 5, 6, 7, 7])
 
 print(res)
+
+assert res[0][0][0] == (1, 2, 3, 4, 5, 6, 7, 8)
+
+
+# %% user defined distance function
+
+def l1norm_dist(x, y):
+    return sum(abs(x - y))
+
+
+res2 = lsh.query([1, 2, 3, 4, 5, 6, 7, 7], dist_func=l1norm_dist)
+
+print(res2)
