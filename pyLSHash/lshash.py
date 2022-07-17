@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-import json
 import numpy as np
 import pickle
 
@@ -39,6 +37,7 @@ class LSHash(object):
         self.storage_config = storage_config or {'dict': None}
 
         self.uniform_planes = None
+        self.hash_tables = None
 
         self.init_uniform_planes()
         self._init_hashtables()
@@ -78,14 +77,6 @@ class LSHash(object):
 
         projections = np.dot(planes, np.array(input_point))
         return "".join(['1' if i > 0 else '0' for i in projections])
-
-    # def _as_np_array(self, item):
-    #     """ Takes either a JSON-serialized data structure or a tuple that has
-    #     the original input points stored, and returns the original input point
-    #     in numpy array format.
-    #     """
-    #     return item[0]
-    #     # return tuple(item[0])
 
     def index(self, input_point, extra_data=''):
         """ Index a single input point by adding it to the selected storage.
