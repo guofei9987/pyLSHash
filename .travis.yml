@@ -9,7 +9,11 @@ install:
   - pip install --upgrade pip
   - pip install --upgrade  -r requirements.txt
   - pip install coverage codecov
-  - pip install .
+  - python setup.py install
+
+install_redis:
+  - sudo snap install redis
+  - pip install redis
 
 # command to run tests
 script:

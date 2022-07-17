@@ -12,7 +12,7 @@
 A fast Python implementation of locality sensitive hashing.
 
 I am using [https://github.com/kayzhu/LSHash](https://github.com/kayzhu/LSHash), but it stops to update since 2013.  
-So I maintain it myself, and I have made a lot of improvement since that.
+So I maintain it myself, and I have made a lot of improvement based on it.
 
 ## Highlights
 
@@ -28,7 +28,7 @@ So I maintain it myself, and I have made a lot of improvement since that.
 
 - numpy
 - redis (if persistency through Redis is needed)
-- bitarray (if hamming distance is used as distance function)
+
 
 To install:
 
