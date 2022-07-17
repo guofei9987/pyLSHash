@@ -8,3 +8,5 @@ lsh = LSHash(hash_size=6, input_dim=8)
 lsh.save_uniform_planes("filename.pkl")
 lsh.load_uniform_planes("filename.pkl")
 
+# %% clear all indexed data
+lsh.clear_storage()

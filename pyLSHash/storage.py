@@ -84,6 +84,9 @@ class InMemoryStorage(StorageBase):
     def get_list(self, key):
         return self.storage.get(key, [])
 
+    def clear(self):
+        self.storage = dict()
+
 
 class RedisStorage(StorageBase):
     def __init__(self, config):
@@ -106,3 +109,7 @@ class RedisStorage(StorageBase):
 
     def get_list(self, key):
         return [json.loads(val) for val in self.storage.lrange(key, 0, -1)]
+
+    def clear(self):
+        for key in self.storage.keys():
+            self.storage.delete(key)

@@ -52,7 +52,7 @@ class LSHash(object):
             self.uniform_planes = pickle.load(f)
 
     def clear_storage(self):
-        pass
+        self.hash_tables.clear()
 
     def init_uniform_planes(self):
         self.uniform_planes = [np.random.randn(self.hash_size, self.input_dim)
