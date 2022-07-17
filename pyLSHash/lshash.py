@@ -99,7 +99,7 @@ class LSHash(object):
         if isinstance(input_point, np.ndarray):
             input_point = input_point.tolist()
 
-        value = [input_point, extra_data]
+        value = (tuple(input_point), extra_data)
 
         for i, table in enumerate(self.hash_tables):
             table.append_val(key=self._hash(self.uniform_planes[i], input_point),
@@ -122,16 +122,16 @@ class LSHash(object):
             list in ranked order.
         """
 
-        candidates = list()
+        candidates = set()
 
         for i, table in enumerate(self.hash_tables):
             query_hash = self._hash(self.uniform_planes[i], query_point)
             if key_hamming:
                 for key in table.keys():
                     if hamming_dist(key, query_hash) < 2:
-                        candidates.extend(table.get_list(key))
+                        candidates.update(table.get_list(key))
             else:
-                candidates.extend(table.get_list(query_hash))
+                candidates.update(table.get_list(query_hash))
 
         # rank candidates by distance function
         candidates = [(ix, dist_func(query_point, ix[0]))

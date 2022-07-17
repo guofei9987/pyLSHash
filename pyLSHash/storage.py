@@ -108,7 +108,8 @@ class RedisStorage(StorageBase):
         self.storage.rpush(key, json.dumps(val))
 
     def get_list(self, key):
-        return [json.loads(val) for val in self.storage.lrange(key, 0, -1)]
+        res_list = [json.loads(val) for val in self.storage.lrange(key, 0, -1)]
+        return tuple((tuple(item[0]), item[1]) for item in res_list)
 
     def clear(self):
         for key in self.storage.keys():

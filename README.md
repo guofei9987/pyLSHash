@@ -77,48 +77,14 @@ res = lsh.query([1, 2, 3, 4, 5, 6, 7, 7])
 print(res)
 ```
 
-
-## Main Interface
-
-
-- To initialize a `LSHash` instance:
-
+## save&load model
 
 ```python
-LSHash(hash_size, input_dim, num_of_hashtables=1, storage=None)
+lsh.save_uniform_planes("filename.pkl")
+lsh.load_uniform_planes("filename.pkl")
 ```
 
-parameters:
-
-- ``hash_size``: The length of the resulting binary hash.
-- ``input_dim``: The dimension of the input vector.
-- ``num_hashtables = 1``: (optional) The number of hash tables used for multiple lookups.
-- ``storage = None``: (optional) Specify the name of the storage to be used for the index storage. Options include "redis".
-
-
-To index a data point of a given ``LSHash`` instance, e.g., ``lsh``:
-
+clear indexed data
 ```python
-lsh.index(input_point, extra_data=None)
+lsh.clear_storage()
 ```
-
-    
-
-parameters:
-
-- ``input_point``: The input data point is an array or tuple of numbers of input_dim.
-- ``extra_data = None``: (optional) Extra data to be added along with the input_point.
-
-To query a data point against a given ``LSHash`` instance, e.g., ``lsh``:
-
-```python
-lsh.query(query_point, num_results=None, distance_func="euclidean")
-```
-
-parameters:
-
-- ``query_point``: The query data point is an array or tuple of numbers of input_dim.
-- ``num_results = None``: (optional) The number of query results to return in ranked order. By default all results will be returned.
-- ``distance_func = "euclidean"``: (optional) Distance function to use to rank the candidates. By default euclidean distance function will be used.
-
-
