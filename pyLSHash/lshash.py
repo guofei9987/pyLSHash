@@ -31,8 +31,7 @@ class LSHash(object):
         `hostname` is normally `localhost` and `port` is normally 6379.
     """
 
-    def __init__(self, hash_size, input_dim, num_hashtables=1,
-                 storage_config=None):
+    def __init__(self, hash_size, input_dim, num_hashtables=1, storage_config=None):
 
         self.hash_size = hash_size
         self.input_dim = input_dim
@@ -51,6 +50,9 @@ class LSHash(object):
     def load_uniform_planes(self, filename):
         with open(filename, 'rb') as f:
             self.uniform_planes = pickle.load(f)
+
+    def clear_storage(self):
+        pass
 
     def init_uniform_planes(self):
         self.uniform_planes = [np.random.randn(self.hash_size, self.input_dim)
@@ -77,39 +79,15 @@ class LSHash(object):
         projections = np.dot(planes, np.array(input_point))
         return "".join(['1' if i > 0 else '0' for i in projections])
 
-    def _as_np_array(self, json_or_tuple):
-        """ Takes either a JSON-serialized data structure or a tuple that has
-        the original input points stored, and returns the original input point
-        in numpy array format.
-        """
-        if isinstance(json_or_tuple, str):
-            # JSON-serialized in the case of Redis
-            try:
-                # Return the point stored as list, without the extra data
-                tuples = json.loads(json_or_tuple)[0]
-            except TypeError:
-                print("The value stored is not JSON-serilizable")
-                raise
-        else:
-            # If extra_data exists, `tuples` is the entire
-            # (point:tuple, extra_data). Otherwise (i.e., extra_data=None),
-            # return the point stored as a tuple
-            tuples = json_or_tuple
+    # def _as_np_array(self, item):
+    #     """ Takes either a JSON-serialized data structure or a tuple that has
+    #     the original input points stored, and returns the original input point
+    #     in numpy array format.
+    #     """
+    #     return item[0]
+    #     # return tuple(item[0])
 
-        if isinstance(tuples[0], tuple):
-            # in this case extra data exists
-            return np.asarray(tuples[0])
-
-        elif isinstance(tuples, (tuple, list)):
-            try:
-                return np.asarray(tuples)
-            except ValueError as e:
-                print("The input needs to be an array-like object", e)
-                raise
-        else:
-            raise TypeError("query data is not supported")
-
-    def index(self, input_point, extra_data=None):
+    def index(self, input_point, extra_data=''):
         """ Index a single input point by adding it to the selected storage.
 
         If `extra_data` is provided, it will become the value of the dictionary
@@ -130,10 +108,7 @@ class LSHash(object):
         if isinstance(input_point, np.ndarray):
             input_point = input_point.tolist()
 
-        if extra_data:
-            value = (tuple(input_point), extra_data)
-        else:
-            value = tuple(input_point)
+        value = [input_point, extra_data]
 
         for i, table in enumerate(self.hash_tables):
             table.append_val(key=self._hash(self.uniform_planes[i], input_point),
@@ -154,26 +129,21 @@ class LSHash(object):
             (optional) Integer, specifies the max amount of results to be
             returned. If not specified all candidates will be returned as a
             list in ranked order.
-        :param distance_func:
-            (optional) The distance function to be used. Currently it needs to
-            be one of ("hamming", "euclidean", "true_euclidean",
-            "centred_euclidean", "cosine", "l1norm"). By default "euclidean"
-            will used.
         """
 
-        candidates = set()
+        candidates = list()
 
         for i, table in enumerate(self.hash_tables):
             query_hash = self._hash(self.uniform_planes[i], query_point)
             if key_hamming:
                 for key in table.keys():
                     if hamming_dist(key, query_hash) < 2:
-                        candidates.update(table.get_list(key))
+                        candidates.extend(table.get_list(key))
             else:
-                candidates.update(table.get_list(query_hash))
+                candidates.extend(table.get_list(query_hash))
 
         # rank candidates by distance function
-        candidates = [(ix, dist_func(query_point, self._as_np_array(ix)))
+        candidates = [(ix, dist_func(query_point, ix[0]))
                       for ix in candidates]
         candidates.sort(key=lambda x: x[1])
 

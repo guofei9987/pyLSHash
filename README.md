@@ -1,5 +1,3 @@
-# pyLSHash
-
 # [pyLSHash](https://github.com/guofei9987/pyLSHash)
 
 [![PyPI](https://img.shields.io/pypi/v/pyLSHash)](https://pypi.org/project/pyLSHash/)
@@ -14,7 +12,7 @@
 A fast Python implementation of locality sensitive hashing.
 
 I am using [https://github.com/kayzhu/LSHash](https://github.com/kayzhu/LSHash), but it stops to update since 2013.  
-So I maintain it myself.
+So I maintain it myself, and I have made a lot of improvement since that.
 
 ## Highlights
 

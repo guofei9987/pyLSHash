@@ -105,4 +105,4 @@ class RedisStorage(StorageBase):
         self.storage.rpush(key, json.dumps(val))
 
     def get_list(self, key):
-        return self.storage.lrange(key, 0, -1)
+        return [json.loads(val) for val in self.storage.lrange(key, 0, -1)]
