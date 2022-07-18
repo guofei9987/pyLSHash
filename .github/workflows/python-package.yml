@@ -33,7 +33,7 @@ jobs:
         python setup.py install
     - name: Install redis
       run: |
-        sudo snap install redis
+        brew install redis
         sudo pip install redis        
     - name: Run redis
       run: |
