@@ -36,7 +36,7 @@ jobs:
         sudo snap install redis
         pip install redis
     - name: Run redis
-        redis-server --port 6381 --daemonize yes
+        redis-server --daemonize yes
     - name: Test all
       run: |
         coverage run -p examples/example1.py
