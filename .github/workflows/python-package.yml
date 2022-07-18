@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8"]
 
     steps:
     - uses: actions/checkout@v3
@@ -29,10 +29,10 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install coverage codecov
+
     - name: Test all
       run: |
         coverage run -p examples/example1.py
-        coverage run -p examples/example_redis.py
-        coverage run -p examples/example_save.py
         coverage combine
         codecov
