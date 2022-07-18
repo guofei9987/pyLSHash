@@ -34,7 +34,7 @@ jobs:
     - name: Install redis
       run: |
         sudo snap install redis
-        pip install redis
+        sudo pip install redis        
     - name: Run redis
       run: |
         redis-server --daemonize yes
