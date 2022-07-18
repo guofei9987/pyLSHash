@@ -34,12 +34,10 @@ jobs:
     - name: Install redis
       run: |
         brew install redis
-        sudo pip install redis        
-    - name: Run redis
-      run: |
-        redis-server --daemonize yes
+        sudo pip install redis
     - name: Test all
       run: |
+        redis-server --daemonize yes
         coverage run -p examples/example1.py
         coverage run -p examples/example_redis.py
         coverage run -p examples/example_save.py
