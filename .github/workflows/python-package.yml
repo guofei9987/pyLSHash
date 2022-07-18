@@ -34,7 +34,7 @@ jobs:
     - name: Install redis
       run: |
         brew install redis
-        sudo pip install redis
+        pip install redis
     - name: Test all
       run: |
         redis-server --daemonize yes
