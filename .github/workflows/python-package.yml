@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 pytest pytest-cov
+        python -m pip install pytest pytest-cov
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install coverage codecov
         python setup.py install
@@ -35,7 +35,13 @@ jobs:
       run: |
         brew install redis
         pip install redis
-    - name: Run tests and collect coverage
-      run: pytest --cov .
-    - name: Upload coverage reports to Codecov with GitHub Action
-      uses: codecov/codecov-action@v3
+    - name: Test all
+      run: |
+        redis-server --daemonize yes
+        coverage run -p examples/example1.py
+        coverage run -p examples/example_redis.py
+        coverage run -p examples/example_save.py
+    - name: Cov
+      run: |
+        coverage combine
+        codecov
