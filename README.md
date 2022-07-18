@@ -1,7 +1,7 @@
 # [pyLSHash](https://github.com/guofei9987/pyLSHash)
 
 [![PyPI](https://img.shields.io/pypi/v/pyLSHash)](https://pypi.org/project/pyLSHash/)
-[![Build Status](https://app.travis-ci.com/guofei9987/pyLSHash.svg?branch=main)](https://app.travis-ci.com/guofei9987/pyLSHash)
+[![Python package](https://github.com/guofei9987/pyLSHash/actions/workflows/python-package.yml/badge.svg)](https://github.com/guofei9987/pyLSHash/actions/workflows/python-package.yml)
 [![codecov](https://codecov.io/gh/guofei9987/pyLSHash/branch/main/graph/badge.svg)](https://codecov.io/gh/guofei9987/pyLSHash)
 [![License](https://img.shields.io/pypi/l/pyLSHash.svg)](https://github.com/guofei9987/pyLSHash/blob/master/LICENSE)
 ![Python](https://img.shields.io/badge/python->=3.5-green.svg)
