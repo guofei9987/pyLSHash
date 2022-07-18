@@ -30,7 +30,7 @@ jobs:
         python -m pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install coverage codecov
-
+        python setup.py install
     - name: Test all
       run: |
         coverage run -p examples/example1.py
