@@ -2,10 +2,10 @@ from pyLSHash import LSHash
 import pyLSHash
 
 print("pyLSHash Version:", pyLSHash.__version__)
-print("run this firstly > redis-server -p 6381 ")
+print("run this firstly > redis-server ")
 # storage_config={"dict":None}
 storage_config = {"redis": {
-    'host': 'localhost', 'port': 6381, 'decode_responses': True}
+    'host': 'localhost', 'port': 6379, 'decode_responses': True}
 }
 
 lsh = LSHash(hash_size=6, input_dim=8, storage_config=storage_config)
