@@ -31,15 +31,18 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install coverage codecov
         python setup.py install
-    - name: Start redis
+    - name: Install redis
       run: |
         sudo snap install redis
         pip install redis
+    - name: Run redis
         redis-server --port 6381 --daemonize yes
     - name: Test all
       run: |
         coverage run -p examples/example1.py
         coverage run -p examples/example_redis.py
         coverage run -p examples/example_save.py
+    - name: Cov
+      run: |
         coverage combine
         codecov
