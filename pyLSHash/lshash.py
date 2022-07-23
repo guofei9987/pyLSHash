@@ -3,7 +3,8 @@
 import numpy as np
 import pickle
 
-from .storage import storage
+# from .storage import storage
+from . import storage
 from . import dist_func
 
 
@@ -21,26 +22,24 @@ class LSHash(object):
         pixels will have an input dimension of 900.
     :param num_hashtables:
         (optional) The number of hash tables used for multiple lookups.
-    :param storage_config:
-        (optional) A dictionary of the form `{backend_name: config}` where
-        `backend_name` is the either `dict` or `redis`, and `config` is the
-        configuration used by the backend. For `redis` it should be in the
-        format of `{"redis": {"host": hostname, "port": port_num}}`, where
-        `hostname` is normally `localhost` and `port` is normally 6379.
+    :param storage:
+        An object to store data
     """
 
-    def __init__(self, hash_size, input_dim, num_hashtables=1, storage_config=None):
+    def __init__(self, hash_size, input_dim, num_hashtables=1,
+                 storage_instance: storage.StorageBase = storage.InMemoryStorage('')):
 
         self.hash_size = hash_size
         self.input_dim = input_dim
         self.num_hashtables = num_hashtables
-        self.storage_config = storage_config or {'dict': None}
+        # self.storage_config = storage_config or {'dict': None}
+        self.storage_instance = storage_instance
 
         self.uniform_planes = None
-        self.hash_tables = None
+        # self.hash_tables = None
 
         self.init_uniform_planes()
-        self._init_hashtables()
+        # self._init_hashtables()
 
     def save_uniform_planes(self, filename):
         with open(filename, 'wb') as f:
@@ -51,18 +50,20 @@ class LSHash(object):
             self.uniform_planes = pickle.load(f)
 
     def clear_storage(self):
-        self.hash_tables.clear()
+        self.storage_instance.clear()
 
     def init_uniform_planes(self):
         self.uniform_planes = [np.random.randn(self.hash_size, self.input_dim)
                                for _ in range(self.num_hashtables)]
 
-    def _init_hashtables(self):
-        """ Initialize the hash tables such that each record will be in the
-        form of "[storage1, storage2, ...]" """
-
-        self.hash_tables = [storage(self.storage_config, i)
-                            for i in range(self.num_hashtables)]
+    # def _init_hashtables(self):
+    #     """ Initialize the hash tables such that each record will be in the
+    #     form of "[storage1, storage2, ...]" """
+    #
+    #     # self.hash_tables = [storage(self.storage_config, i)
+    #     #                     for i in range(self.num_hashtables)]
+    #     #
+    #     self.hash_tables = [self.storage(i) for i in range(self.num_hashtables)]
 
     def _hash(self, planes, input_point):
         """ Generates the binary hash for `input_point` and returns it.
@@ -101,9 +102,14 @@ class LSHash(object):
 
         value = (tuple(input_point), extra_data)
 
-        for i, table in enumerate(self.hash_tables):
-            table.append_val(key=self._hash(self.uniform_planes[i], input_point),
-                             val=value)
+        # for i, table in enumerate(self.hash_tables):
+        #     table.append_val(key=self._hash(self.uniform_planes[i], input_point),
+        #                      val=value)
+
+        for i in range(self.num_hashtables):
+            self.storage_instance.append_val(
+                key=str(i) + "|" + self._hash(self.uniform_planes[i], input_point),
+                val=value)
 
     def query(self, query_point, num_results=None
               , dist_func=dist_func.euclidean_dist_square
@@ -123,15 +129,30 @@ class LSHash(object):
         """
 
         candidates = set()
-        query_point=np.array(query_point)
-        for i, table in enumerate(self.hash_tables):
-            query_hash = self._hash(self.uniform_planes[i], query_point)
-            if key_hamming:
-                for key in table.keys():
-                    if hamming_dist(key, query_hash) < 2:
-                        candidates.update(table.get_list(key))
-            else:
-                candidates.update(table.get_list(query_hash))
+        query_point = np.array(query_point)
+
+        if key_hamming:
+            for i in range(self.num_hashtables):
+                query_hash = self._hash(self.uniform_planes[i], query_point)
+                for key in self.storage_instance.keys():
+                    key1, key2 = key.split('|')
+                    if key1 == str(i):
+                        if hamming_dist(key2, query_hash) < 2:
+                            candidates.update(self.storage_instance.get_list(key2))
+
+        if not key_hamming:
+            for i in range(self.num_hashtables):
+                query_hash = self._hash(self.uniform_planes[i], query_point)
+                candidates.update(self.storage_instance.get_list(str(i) + '|' + query_hash))
+
+        # for i, table in enumerate(self.hash_tables):
+        #     query_hash = self._hash(self.uniform_planes[i], query_point)
+        #     if key_hamming:
+        #         for key in table.keys():
+        #             if hamming_dist(key, query_hash) < 2:
+        #                 candidates.update(table.get_list(key))
+        #     else:
+        #         candidates.update(table.get_list(query_hash))
 
         # rank candidates by distance function
         candidates = [(ix, dist_func(query_point, np.array(ix[0])))

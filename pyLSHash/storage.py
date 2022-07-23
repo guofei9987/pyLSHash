@@ -8,7 +8,7 @@ try:
 except ImportError:
     redis = None
 
-__all__ = ['storage']
+__all__ = ['storage', 'StorageBase', 'InMemoryStorage', 'RedisStorage']
 
 
 def storage(storage_config, index):
@@ -60,6 +60,12 @@ class StorageBase(metaclass=ABCMeta):
 
         This method should return a list of values stored at `key`. `[]` should
         be returned if the list is empty or if `key` is not present in storage.
+        """
+        pass
+
+    @abstractmethod
+    def clear(self) -> None:
+        """ Clear all data
         """
         pass
 
