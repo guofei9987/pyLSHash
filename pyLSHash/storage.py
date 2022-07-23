@@ -3,26 +3,6 @@
 import json
 from abc import ABCMeta, abstractmethod
 
-try:
-    import redis
-except ImportError:
-    redis = None
-
-__all__ = ['storage', 'StorageBase', 'InMemoryStorage', 'RedisStorage']
-
-
-def storage(storage_config, index):
-    """ Given the configuration for storage and the index, return the
-    configured storage instance.
-    """
-    if 'dict' in storage_config:
-        return InMemoryStorage(storage_config['dict'])
-    elif 'redis' in storage_config:
-        storage_config['redis']['db'] = index
-        return RedisStorage(storage_config['redis'])
-    else:
-        raise ValueError("Only in-memory dictionary and Redis are supported.")
-
 
 class StorageBase(metaclass=ABCMeta):
     @abstractmethod
@@ -96,8 +76,11 @@ class InMemoryStorage(StorageBase):
 
 class RedisStorage(StorageBase):
     def __init__(self, config):
-        if not redis:
+        try:
+            import redis
+        except ImportError:
             raise ImportError("redis-py is required to use Redis as storage.")
+
         self.name = 'redis'
         self.storage = redis.StrictRedis(**config)
 

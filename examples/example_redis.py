@@ -4,14 +4,9 @@ import pyLSHash
 
 print("pyLSHash Version:", pyLSHash.__version__)
 print("run this firstly > redis-server ")
-# storage_config={"dict":None}
-storage_config = {"redis": {
-    'host': 'localhost', 'port': 6379, 'decode_responses': True}
-}
 
 lsh = LSHash(hash_size=6, input_dim=8
-             , storage_instance=RedisStorage({
-        'host': 'localhost', 'port': 6379, 'decode_responses': True}))
+             , storage_instance=RedisStorage({'host': 'localhost', 'port': 6379, 'decode_responses': True}))
 
 lsh.index([1, 2, 3, 4, 5, 6, 7, 8])
 lsh.index([2, 3, 4, 5, 6, 7, 8, 9])
