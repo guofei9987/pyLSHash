@@ -33,7 +33,8 @@ jobs:
         python setup.py install
     - name: Install redis
       run: |
-        brew install redis
+        sudo apt update
+        sudo apt install redis -y
         pip install redis
     - name: Test all
       run: |
