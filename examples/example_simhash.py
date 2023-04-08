@@ -1,7 +1,7 @@
 import jieba
 import collections
-from file_simi.sim_hash import SimHash
-from img_simi.distance import hamming
+from pyLSHash import SimHash
+from pyLSHash import hamming
 import random
 
 sentence = '''

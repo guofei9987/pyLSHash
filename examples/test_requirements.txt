@@ -1,1 +1,2 @@
 blind_watermark
+jieba

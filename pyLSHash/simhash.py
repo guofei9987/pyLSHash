@@ -53,13 +53,14 @@ class SimHash(object):
         return self.get_hash_dict(features)
 
     def get_hash_dict(self, features: dict):
+        hash_func = self.hash_func
         truncate_mask = (1 << self.f) - 1
 
         batch = list()
         cnt = 0
         for feature, weight in features.items():
             # 截断，只要末尾。md5的结果长度 16，这里取 f_bytes，长度为 8
-            h = _hashfunc(feature.encode('utf-8'))[-self.f_bytes:]
+            h = hash_func(feature.encode('utf-8'))[-self.f_bytes:]
             #     TODO：
             # 默认的_hashfunc（hashlib.md5(x).digest() ）返回 byte 类型
             # 自定义的有时候返回 int
