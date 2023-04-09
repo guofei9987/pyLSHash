@@ -1,2 +1,3 @@
 blind_watermark
 jieba
+scikit-learn
