@@ -11,8 +11,20 @@
 
 A fast Python implementation of locality sensitive hashing.
 
-I was using [kayzhu/LSHash](https://github.com/kayzhu/LSHash), but it stopped updating since 2013.  
-So I maintain it myself, and I have made a lot of improvement based on it.
+
+
+| Algorithm | Function                                                                                                                                           | Application                         | Features                                                                              |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|---------------------------------------------------------------------------------------|
+| LSH       | Map high-dimensional vectors to low-dimensional space and map similar vectors to the same bucket through hash functions                            | Fast search for approximate vectors | Suitable for large-scale high-dimensional data                                        |
+| min-hash  | Map sets to signature matrices and find similar sets by calculating Jaccard similarity                                                             | Similarity retrieval                | Suitable for text, network, audio, and other data                                     |
+| SimHash   | Convert high-dimensional data such as text and images into fixed-length vectors, and map similar vectors to the same bucket through hash functions | Text and image similarity retrieval | Suitable for high-dimensional data                                                    |
+| aHash     | Compress images to a fixed size and map similar images to the same bucket through hash functions                                                   | Similar image retrieval             | Has some robustness to scaling and slight deformations                                |
+| dHash     | Convert images to grayscale and calculate difference values, then map similar images to the same bucket through hash functions                     | Similar image retrieval             | Has some robustness to scaling and slight deformations                                |
+| pHash     | Convert images to DCT coefficients and map similar images to the same bucket through hash functions                                                | Similar image retrieval             | Has some robustness to scaling, brightness, translation, rotation, and noise addition |
+
+
+
+
 
 ## Highlights
 
@@ -160,3 +172,12 @@ x = np.random.randint(0, 2, n)
 min_hash_val = min_hash.get_min_hash(x, n, k=4)
 print(min_hash_val)
 ```
+
+
+## Other examples
+
+- Examples for min-hash ：[examples/example_min_hash.py](examples/example_min_hash.py)
+- Examples for SimHash ：[examples/example_simhash.py](examples/example_simhash.py), [examples/example_simhash2.py](examples/example_simhash2.py)
+- Examples for aHash ：[examples/example_img_hash.py](examples/example_img_hash.py)
+- Examples for dHash ： [examples/example_img_hash.py](examples/example_img_hash.py)
+- Examples for pHash ：[examples/example_img_hash.py](examples/example_img_hash.py)
