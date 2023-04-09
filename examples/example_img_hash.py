@@ -3,8 +3,8 @@ from pyLSHash import img_hash
 from pyLSHash import hamming
 import PIL
 
-img1 = 'files/img.jpeg'
-img2 = 'files/att_img.jpeg'
+img1 = 'img.jpeg'
+img2 = 'att_img.jpeg'
 att.resize_att(input_filename=img1, output_file_name=img2, out_shape=(300, 500))
 
 # %% aHash

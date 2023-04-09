@@ -40,6 +40,7 @@ jobs:
     - name: Test all
       run: |
         redis-server --daemonize yes
+        cp examples/img.jpeg img.jpeg
         coverage run -p examples/example1.py
         coverage run -p examples/example_redis.py
         coverage run -p examples/example_save.py
