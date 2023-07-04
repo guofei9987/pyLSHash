@@ -37,6 +37,11 @@ jobs:
         sudo apt update
         sudo apt install redis -y
         pip install redis
+    - name: Install gcc
+      run: |
+        sudo apt update
+        sudo apt install gcc -y
+        python setup.py install
     - name: Test all
       run: |
         redis-server --daemonize yes
