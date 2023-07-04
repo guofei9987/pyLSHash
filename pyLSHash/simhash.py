@@ -1,7 +1,16 @@
+"""
+simhash
+int: return the origin int
+dict: do hash for every item, and get the weighted average.
+str: get lower -> get chars with regex -> get rolling slice(window=4), transform to dict, and get hash as dict
+Iterable: transform to dict, and get hash as dict
+"""
+
 import collections
 import hashlib
 import re
-from collections import Counter, Iterable
+from collections import Counter
+from collections.abc import Iterable
 
 import numpy as np
 

@@ -2,24 +2,27 @@ from pyLSHash import SimHash
 from pyLSHash import hamming
 
 simhash = SimHash()
-assert simhash.get_hash(0) == 0
-assert simhash.get_hash(9223372036854775808) == 9223372036854775808
 
 # %%
 h0 = simhash.get_hash('How are you? I AM fine. Thanks. And you?')
 h1 = simhash.get_hash('How are you? I AM fine. Thanks. And you?')
 h2 = simhash.get_hash('How old are you ? :-) i am fine. Thanks. And you?')
 
+assert hamming(h0, h1) == 0
+assert hamming(h0, h2) != 0
+
+# %%
 sh1 = simhash.get_hash('你好　世界！　　呼噜。')
 sh2 = simhash.get_hash('你好，世界　呼噜')
+assert hamming(sh1, sh2) == 0
+
+# %%
+
 
 sh4 = simhash.get_hash('How are you? I Am fine. ablar ablar xyz blar blar blar blar blar blar blar Thanks.')
 sh5 = simhash.get_hash('How are you i am fine.ablar ablar xyz blar blar blar blar blar blar blar than')
 sh6 = simhash.get_hash('How are you i am fine.ablar ablar xyz blar blar blar blar blar blar blar thank')
 
-assert hamming(h0, h1) == 0
-assert hamming(h1, h2) != 0
-assert hamming(sh1, sh2) == 0
 assert hamming(sh4, sh5) < 3
 assert hamming(sh5, sh6) < 3
 
@@ -30,6 +33,10 @@ for i, sh1 in enumerate(shs):
     for j, sh2 in enumerate(shs):
         if i != j:
             assert sh1 != sh2
+
+# %%
+assert simhash.get_hash(0) == 0
+assert simhash.get_hash(9223372036854775808) == 9223372036854775808
 
 # %%
 from sklearn.feature_extraction.text import TfidfVectorizer
