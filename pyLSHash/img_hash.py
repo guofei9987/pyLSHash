@@ -12,7 +12,7 @@ import cv2
 
 
 def a_hash(im: Image.Image):
-    im = im.resize((8, 8), Image.ANTIALIAS).convert('L')
+    im = im.resize((8, 8), Image.LANCZOS).convert('L')
     avg = sum(im.getdata()) / 64
     res = 0
     for i in im.getdata():
@@ -22,7 +22,7 @@ def a_hash(im: Image.Image):
 
 
 def d_hash(img: Image.Image):
-    img = img.resize((9, 8), Image.ANTIALIAS).convert('L')
+    img = img.resize((9, 8), Image.LANCZOS).convert('L')
 
     res = 0
     for x in range(8):
@@ -33,7 +33,7 @@ def d_hash(img: Image.Image):
 
 
 def p_hash(img: Image.Image):
-    img = img.resize((32, 32), Image.ANTIALIAS).convert('L')
+    img = img.resize((32, 32), Image.LANCZOS).convert('L')
     dct = cv2.dct(np.float32(img))[:8, :8]
 
     avg = dct.mean()
