@@ -13,6 +13,7 @@
 
 | 算法       | 功能                                  | 场景                    | 特点                        |
 |----------|-------------------------------------|-----------------------|---------------------------|
+| fuzzy-hash| 计算字符串、二进制、文件的 Hash 值，使相似的内容对应的 Hash 值也相似 | 快速检索相似文档、文件 | 适用于检测存在轻微变化的内容 |
 | LSH      | 把实数向量映射到 Hash 值，使相似的向量对应的 Hash 值也相似 | O(N)时间内快速检索到top-k相似向量 |                           |
 | min-hash | 把集合映射到 Hash 值，使相似的集合对应的 Hash 值也相似   | 快速检索相似集合、检索相似文档       | Hash 值相同的概率，等于 Jaccard 系数 |
 | SimHash  | 把文档映射到 Hash 值，使相似的集合对应的 Hash 值也相似   | 快速检索相似文档              |                           |
@@ -22,6 +23,7 @@
 
 
 
+- fuzzy-hash 的例子：[examples/fuzzy_hash.py](examples/fuzzy_hash.py)
 - min-hash 的例子：[examples/example_min_hash.py](examples/example_min_hash.py)
 - SimHash 的例子：[examples/example_simhash.py](examples/example_simhash.py), [examples/example_simhash2.py](examples/example_simhash2.py)
 - aHash 的例子：[examples/example_img_hash.py](examples/example_img_hash.py)
