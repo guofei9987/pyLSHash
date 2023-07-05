@@ -2,7 +2,7 @@
 simhash
 int: return the origin int
 dict: do hash for every item, and get the weighted average.
-str: get lower -> get chars with regex -> get rolling slice(window=4), transform to dict, and get hash as dict
+str: get lower -> get valid chars with regex -> get rolling slice(window=4), transform to dict, and get hash as dict
 Iterable: transform to dict, and get hash as dict
 """
 
@@ -28,16 +28,16 @@ def _hashfunc(x):
 
 
 class SimHash(object):
-    def __init__(self, f=64):
+    def __init__(self, len_hash=64):
         self.val = None
         self.regex = re.compile(r'[\w\u4e00-\u9fcc]+')
         self.hash_func = _hashfunc
 
         # f： dimensions of fingerprints, in bits
-        assert f % 8 == 0, 'len_hash must be a multiple of 8'
+        assert len_hash % 8 == 0, 'len_hash must be a multiple of 8'
 
-        self.f = f
-        self.f_bytes = f // 8
+        self.len_hash = len_hash
+        self.f_bytes = len_hash // 8
 
     def get_hash(self, val):
         if isinstance(val, int):
@@ -63,7 +63,7 @@ class SimHash(object):
 
     def get_hash_dict(self, features: dict):
         hash_func = self.hash_func
-        truncate_mask = (1 << self.f) - 1
+        truncate_mask = (1 << self.len_hash) - 1
 
         batch = list()
         cnt = 0
@@ -87,7 +87,7 @@ class SimHash(object):
     def _sum_hashes(self, digests):
         # 转二进制
         bitarray = self._bitarray_from_bytes(b''.join(digests))
-        rows = np.reshape(bitarray, (-1, self.f))
+        rows = np.reshape(bitarray, (-1, self.len_hash))
         return np.sum(rows, 0)
 
     @staticmethod

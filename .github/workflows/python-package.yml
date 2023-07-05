@@ -53,6 +53,7 @@ jobs:
         coverage run -p examples/example_img_hist.py
         coverage run -p examples/example_simhash.py
         coverage run -p examples/example_simhash2.py
+        coverage run -p examples/example_fuzzy_hash.py
     - name: Cov
       run: |
         coverage combine
