@@ -15,12 +15,13 @@ A fast Python implementation of locality sensitive hashing.
 
 | Algorithm | Function                                                                                                                                           | Application                         | Features                                                                              |
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|---------------------------------------------------------------------------------------|
-| LSH       | Map high-dimensional vectors to low-dimensional space and map similar vectors to the same bucket through hash functions                            | Fast search for approximate vectors | Suitable for large-scale high-dimensional data                                        |
+| fuzzy-hash| Map text or string or file to 64-bits (or other) hash values. Similar contents hash similar hash values                                            | Fast compare similar contents       | Suitable for text/string/file                     
 | min-hash  | Map sets to signature matrices and find similar sets by calculating Jaccard similarity                                                             | Similarity retrieval                | Suitable for text, network, audio, and other data                                     |
 | SimHash   | Convert high-dimensional data such as text and images into fixed-length vectors, and map similar vectors to the same bucket through hash functions | Text and image similarity retrieval | Suitable for high-dimensional data                                                    |
 | aHash     | Compress images to a fixed size and map similar images to the same bucket through hash functions                                                   | Similar image retrieval             | Has some robustness to scaling and slight deformations                                |
 | dHash     | Convert images to grayscale and calculate difference values, then map similar images to the same bucket through hash functions                     | Similar image retrieval             | Has some robustness to scaling and slight deformations                                |
 | pHash     | Convert images to DCT coefficients and map similar images to the same bucket through hash functions                                                | Similar image retrieval             | Has some robustness to scaling, brightness, translation, rotation, and noise addition |
+| LSH       | Map high-dimensional vectors to low-dimensional space and map similar vectors to the same bucket through hash functions                            | Fast search for approximate vectors | Suitable for large-scale high-dimensional data                                        |
 
 
 
@@ -103,6 +104,8 @@ print('corr = {}%'.format(corr))
 b'24:TsoR7RmxthHLDYTvxiiIhNM+Nkr6gy8o4xB6YR514cLCxd6tXilru2uEUv:fR7RmBHATdN+OulOZrIxdA7'
 corr = 86%
 
+Look at [examples/example_fuzzy_hash.py](examples/example_fuzzy_hash.py)
+
 
 ### SimHash
 
@@ -119,11 +122,34 @@ print(sh1)
 print(sh2)
 print('corr = {}'.format(corr))
 ```
->957004571726091744
-943493772323861728
-corr = 0.890625
+
+>957004571726091744  
+943493772323861728  
+corr = 0.890625  
+
+
+Look at [examples/example_simhash.py](examples/example_simhash.py)
 
 ### minHash
+
+
+```python
+from pyLSHash import min_hash
+
+k = 3  # minHash 值的维度
+
+x1 = [1, 1, 0, 0, 0, 1, 1, 1, 1, 0]
+x2 = [1, 0, 0, 0, 0, 1, 1, 1, 1, 0]
+
+n = len(x1)  # 向量的维度
+min_hash_val1 = min_hash.get_min_hash(x1, n, k)
+min_hash_val2 = min_hash.get_min_hash(x2, n, k)
+print(min_hash_val1)
+print(min_hash_val2)
+```
+
+>[1, 0, 0]  
+[1, 0, 0]  
 
 
 Look at [examples/example_min_hash.py](examples/example_min_hash.py)
@@ -131,11 +157,44 @@ Look at [examples/example_min_hash.py](examples/example_min_hash.py)
 
 ### aHash/dHash/pHash
 
+aHash
+```python
+a_hash_img1 = img_hash.a_hash(PIL.Image.open(img1))
+a_hash_img2 = img_hash.a_hash(PIL.Image.open(img2))
+hamming_distance = hamming(a_hash_img1, a_hash_img2)
+```
+
+
+dHash
+```python
+d_hash_img1 = img_hash.d_hash(PIL.Image.open(img1))
+d_hash_img2 = img_hash.d_hash(PIL.Image.open(img2))
+hamming_distance = hamming(d_hash_img1, d_hash_img2)
+```
+
+
+pHash
+```python
+p_hash_img1 = img_hash.p_hash(PIL.Image.open(img1))
+p_hash_img2 = img_hash.p_hash(PIL.Image.open(img2))
+hamming_distance = hamming(p_hash_img1, p_hash_img2)
+```
+
+outputs:
+>[aHash]: img1 = 0xffc3c3db819f0000, img2 = 0xffc3c3cb819f0000  
+hamming_distance = 1  
+[dHash]: img1 = 0x7ffae0c63d188743, img2 = 0x7ffae0c23d188743  
+hamming_distance = 1  
+[pHash]: img1 = 0xa8a0008200000000, img2 = 0xa8a0008200000000  
+hamming_distance = 0  
+
+
+
 Look at [examples/example_img_hash.py](examples/example_img_hash.py)
 
 
 
-### LSHash
+## LSHash
 To create 6-bit hashes for input data of 8 dimensions:
 
 
@@ -168,7 +227,7 @@ print(res2)
 ```
 
 
-## Use Redis
+### Use Redis
 
 ```python
 from pyLSHash import LSHash
@@ -186,7 +245,7 @@ lsh.index([10, 12, 99, 1, 5, 31, 2, 3])
 res = lsh.query([1, 2, 3, 4, 5, 6, 7, 7])
 ```
 
-## Use other database as storage
+### Use other database as storage
 
 ```python
 from pyLSHash import LSHash
@@ -233,7 +292,7 @@ res = lsh.query([1, 2, 3, 4, 5, 6, 7, 7])
 ```
 
 
-## save&load model
+### save&load model
 
 ```python
 lsh.save_uniform_planes("filename.pkl")
@@ -244,20 +303,6 @@ clear indexed data
 ```python
 lsh.clear_storage()
 ```
-
-## min-hash
-
-```python
-import numpy as np
-from pyLSHash import min_hash
-
-n = 10  # 原向量的维度
-x = np.random.randint(0, 2, n)
-
-min_hash_val = min_hash.get_min_hash(x, n, k=4)
-print(min_hash_val)
-```
-
 
 ## Other examples
 
