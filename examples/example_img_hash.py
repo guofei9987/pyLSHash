@@ -4,9 +4,9 @@ from pyLSHash import hamming
 import PIL
 
 img1 = 'img.jpeg'
-img2 = 'att_img.jpeg'
-att.resize_att(input_filename=img1, output_file_name=img2, out_shape=(300, 500))
-img1_att_noise = att.shelter_att(input_filename=img1, output_file_name='img_with_noise.jpeg')
+img2 = 'img_att.jpeg'
+
+# att.resize_att(input_filename=img1, output_file_name=img2, out_shape=(300, 500))
 
 # %% aHash
 a_hash_img1 = img_hash.a_hash(PIL.Image.open(img1))
@@ -41,6 +41,6 @@ from pyLSHash.img_ssim import SSIM
 
 ssim = SSIM()
 
-ssim_score = ssim.cal_ssim(cv2.imread(img1), cv2.imread('img_with_noise.jpeg'))
+ssim_score = ssim.cal_ssim_resize(cv2.imread(img1), cv2.imread(img2))
 
 print("SSIM after attack:", ssim_score)
