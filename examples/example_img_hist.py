@@ -4,9 +4,9 @@ from blind_watermark import att
 from pyLSHash import img_hist
 
 img1 = 'img.jpeg'
-img2 = 'att_img.jpeg'
+img2 = 'img_att.jpeg'
 
-att.resize_att(input_filename=img1, output_file_name=img2, out_shape=(300, 500))
+# att.resize_att(input_filename=img1, output_file_name=img2, out_shape=(300, 500))
 
 
 # %%

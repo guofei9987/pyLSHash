@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 from cv2 import filter2D, getGaussianKernel
 
@@ -22,3 +23,8 @@ class SSIM:
         ssim = ((2 * mu1xmu2 + self.c1) * (2 * sigma12 + self.c2)) / \
                ((mu1_sq + mu2_sq + self.c1) * (sigma1_sq + sigma2_sq + self.c2))
         return ssim.mean()
+
+    def cal_ssim_resize(self, img1, img2):
+        h, w = img1.shape[:2]
+        img2_resize = cv2.resize(img2, dsize=(w, h))
+        return self.cal_ssim(img1, img2_resize)
