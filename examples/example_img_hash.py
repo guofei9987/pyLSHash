@@ -6,7 +6,8 @@ import PIL
 img1 = 'img.jpeg'
 img2 = 'img_att.jpeg'
 
-# att.resize_att(input_filename=img1, output_file_name=img2, out_shape=(300, 500))
+# build up another image
+att.resize_att(input_filename=img1, output_file_name=img2, out_shape=(300, 500))
 
 # %% aHash
 a_hash_img1 = img_hash.a_hash(PIL.Image.open(img1))
