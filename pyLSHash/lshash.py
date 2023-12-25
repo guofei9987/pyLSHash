@@ -121,7 +121,7 @@ class LSHash(object):
                     key1, key2 = key.split('|')
                     if key1 == str(i):
                         if hamming_dist(key2, query_hash) < 2:
-                            candidates.update(self.storage_instance.get_list(key2))
+                            candidates.update(self.storage_instance.get_list(key))
 
         if not key_hamming:
             for i in range(self.num_hashtables):
